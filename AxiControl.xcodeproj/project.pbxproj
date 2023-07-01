@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0520C01B2A50C6D5006133DD /* SVGImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520C01A2A50C6D5006133DD /* SVGImageView.swift */; };
 		0520C01D2A50C6F8006133DD /* DragDropContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520C01C2A50C6F8006133DD /* DragDropContentView.swift */; };
-		0520C01F2A50C73D006133DD /* DragAndDropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0520C01E2A50C73D006133DD /* DragAndDropView.swift */; };
 		0558F3592A4A5E9800D6F831 /* AxiControlApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0558F3582A4A5E9800D6F831 /* AxiControlApp.swift */; };
 		0558F35B2A4A5E9800D6F831 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0558F35A2A4A5E9800D6F831 /* ContentView.swift */; };
 		0558F35D2A4A5E9A00D6F831 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0558F35C2A4A5E9A00D6F831 /* Assets.xcassets */; };
@@ -17,9 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0520C01A2A50C6D5006133DD /* SVGImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SVGImageView.swift; sourceTree = "<group>"; };
 		0520C01C2A50C6F8006133DD /* DragDropContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragDropContentView.swift; sourceTree = "<group>"; };
-		0520C01E2A50C73D006133DD /* DragAndDropView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragAndDropView.swift; sourceTree = "<group>"; };
 		0520C0202A50C918006133DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		0558F3552A4A5E9800D6F831 /* AxiControl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AxiControl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0558F3582A4A5E9800D6F831 /* AxiControlApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AxiControlApp.swift; sourceTree = "<group>"; };
@@ -65,9 +61,7 @@
 				0558F35C2A4A5E9A00D6F831 /* Assets.xcassets */,
 				0558F3612A4A5E9A00D6F831 /* AxiControl.entitlements */,
 				0558F35E2A4A5E9A00D6F831 /* Preview Content */,
-				0520C01A2A50C6D5006133DD /* SVGImageView.swift */,
 				0520C01C2A50C6F8006133DD /* DragDropContentView.swift */,
-				0520C01E2A50C73D006133DD /* DragAndDropView.swift */,
 			);
 			path = AxiControl;
 			sourceTree = "<group>";
@@ -150,11 +144,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0520C01F2A50C73D006133DD /* DragAndDropView.swift in Sources */,
 				0558F35B2A4A5E9800D6F831 /* ContentView.swift in Sources */,
 				0520C01D2A50C6F8006133DD /* DragDropContentView.swift in Sources */,
 				0558F3592A4A5E9800D6F831 /* AxiControlApp.swift in Sources */,
-				0520C01B2A50C6D5006133DD /* SVGImageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
