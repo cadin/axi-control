@@ -12,6 +12,7 @@
 		0558F35B2A4A5E9800D6F831 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0558F35A2A4A5E9800D6F831 /* ContentView.swift */; };
 		0558F35D2A4A5E9A00D6F831 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0558F35C2A4A5E9A00D6F831 /* Assets.xcassets */; };
 		0558F3602A4A5E9A00D6F831 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0558F35F2A4A5E9A00D6F831 /* Preview Assets.xcassets */; };
+		058FA4A92A549CD600A1871A /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058FA4A82A549CD600A1871A /* SidebarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		0558F35C2A4A5E9A00D6F831 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0558F35F2A4A5E9A00D6F831 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		0558F3612A4A5E9A00D6F831 /* AxiControl.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AxiControl.entitlements; sourceTree = "<group>"; };
+		058FA4A82A549CD600A1871A /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 				0558F3612A4A5E9A00D6F831 /* AxiControl.entitlements */,
 				0558F35E2A4A5E9A00D6F831 /* Preview Content */,
 				0520C01C2A50C6F8006133DD /* DragDropContentView.swift */,
+				058FA4A82A549CD600A1871A /* SidebarView.swift */,
 			);
 			path = AxiControl;
 			sourceTree = "<group>";
@@ -145,6 +148,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0558F35B2A4A5E9800D6F831 /* ContentView.swift in Sources */,
+				058FA4A92A549CD600A1871A /* SidebarView.swift in Sources */,
 				0520C01D2A50C6F8006133DD /* DragDropContentView.swift in Sources */,
 				0558F3592A4A5E9800D6F831 /* AxiControlApp.swift in Sources */,
 			);

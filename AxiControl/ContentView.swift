@@ -8,12 +8,11 @@
 import SwiftUI
 
 
-
-
 struct ContentView: View {
+    @AppStorage("modelNumber") var modelNumber = 1
     @State var isRunning = false
     @State var output = "Hello AxiControl"
-    @AppStorage("modelNumber") private var modelNumber = 1
+    
     @State var currentFileURL: URL?
     
     let axiModels  = [
@@ -25,6 +24,13 @@ struct ContentView: View {
         "AxiDraw SE/A2",
         "AxiDraw V3/B6",
     ]
+    
+//    let models = [
+//        {name: "AxiDraw V2", value: 1},
+//        {name: "AxiDraw V3", value: 1},
+//        {name: "AxiDraw SE/A4", value: 1},
+//        {name: "Axidraw V3/A3", value: 2}
+//    ]
     
     
     let axiURL = URL(fileURLWithPath: "/usr/local/bin/axicli")
@@ -73,8 +79,18 @@ struct ContentView: View {
         sendAxiCommand("-m manual -M disable_xy")
     }
     
+    func enableMotors() {
+        sendAxiCommand("-m manual -M enable_xy")
+    }
+    
     func walkX() {
+        // TODO: get max dist for selected model
         sendAxiCommand("-m manual -M walk_x --dist 16.5")
+    }
+    
+    func walkY() {
+        // TODO: get max dist for selected model
+        sendAxiCommand("-m manual -M walk_y --dist 16.5")
     }
     
     func preview() {
@@ -84,54 +100,54 @@ struct ContentView: View {
        
     }
     
+    func penUp() {
+        
+    }
+    
+    func penDown() {
+        
+    }
+    
     func startPlot() {
         if let url = currentFileURL {
             runAxCLI(args: [url.path])
         }
     }
     
-    func onModelSelect(_ modelName: String) {
-        let num = axiModels.firstIndex(of: modelName)! + 1
-        modelNumber = num;
-        
-        
-    }
+    let controlWidth = 180.0
     
 //    let modelName = axiModels[modelNumber - 1]
 
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text(output)
-            Menu (axiModels[modelNumber - 1]){
-                ForEach(axiModels, id: \.self){ model in
-                    Button(model, action: {onModelSelect(model)})
-                }
-                
-            }
-            Button("Home", action: goHome)
-            Button("Disable Motors", action: disableMotors)
-            Button("Walk X", action: walkX)
-            Button("Version", action: version)
-            Button("Preview", action: preview)
+        VStack(alignment: .leading){
+            HStack(){
+                SidebarView(modelNumber:$modelNumber, goHome: goHome, walkX: walkX, walkY: walkY, enableMotors: enableMotors, disableMotors: disableMotors, penUp: penUp, penDown: penDown  )
+                DragDropContentView(onFileDropped: onFilePathChanged)
+            }.frame(maxWidth: .infinity)
             
-            DragDropContentView(onFileDropped: onFilePathChanged)
         }
-        .padding()
-        
-        .toolbar {
-            Button(action: startPlot) {
-                Label("Start Plot", systemImage: "pencil.line")
-            }.help("Start a plot")
-        
-            Button("Start Plot", action: startPlot)
+
+//        VStack(alignment: .trailing) {
+//            Image(systemName: "globe")
+//                .imageScale(.large)
+//                .foregroundColor(.accentColor)
+//            Text(output)
             
-        }.navigationTitle("")
+           
+           
+            
+            
+//            Button("Version", action: version)
+//            Button("Preview", action: preview)
+            
+            
+//        }
+        
+        
     }
     
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
