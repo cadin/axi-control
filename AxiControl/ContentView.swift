@@ -10,28 +10,15 @@ import SwiftUI
 
 struct ContentView: View {
     @AppStorage("modelNumber") var modelNumber = 1
+    @AppStorage("modelIndex") var modelIndex = 1
+    
+    @AppStorage("reorderNumber") var reorderNumber = 1
+    @AppStorage("reorderIndex") var reorderIndex = 1
+    
     @State var isRunning = false
     @State var output = "Hello AxiControl"
     
     @State var currentFileURL: URL?
-    
-    let axiModels  = [
-        "AxiDraw V2, V3, or SE/A4",
-        "AxiDraw V3/A3 or SE/A3",
-        "AxiDraw V3 XLX",
-        "AxiDraw MiniKit",
-        "AxiDraw SE/A1",
-        "AxiDraw SE/A2",
-        "AxiDraw V3/B6",
-    ]
-    
-//    let models = [
-//        {name: "AxiDraw V2", value: 1},
-//        {name: "AxiDraw V3", value: 1},
-//        {name: "AxiDraw SE/A4", value: 1},
-//        {name: "Axidraw V3/A3", value: 2}
-//    ]
-    
     
     let axiURL = URL(fileURLWithPath: "/usr/local/bin/axicli")
     
@@ -49,7 +36,7 @@ struct ContentView: View {
         let task = Process()
         task.executableURL = axiURL
         task.standardOutput = outputPipe
-        task.arguments = args + ["--model", String(modelNumber)]
+        task.arguments = args + ["--model", String(modelNumber), "--reordering", String(reorderNumber)]
         task.terminationHandler = { _ in self.isRunning = false }
         
         try! task.run()
@@ -101,11 +88,11 @@ struct ContentView: View {
     }
     
     func penUp() {
-        
+        sendAxiCommand("-m manual -M raise_pen")
     }
     
     func penDown() {
-        
+        sendAxiCommand("-m manual -M lower_pen")
     }
     
     func startPlot() {
@@ -114,35 +101,23 @@ struct ContentView: View {
         }
     }
     
-    let controlWidth = 180.0
+    func resumeFromLocation() {
+        // TODO res_plot
+    }
     
-//    let modelName = axiModels[modelNumber - 1]
+    func resumeFromHome() {
+        // TODO res_home
+    }
+    
 
     var body: some View {
-        VStack(alignment: .leading){
+        VStack(alignment: .leading, spacing: 0){
             HStack(){
-                SidebarView(modelNumber:$modelNumber, goHome: goHome, walkX: walkX, walkY: walkY, enableMotors: enableMotors, disableMotors: disableMotors, penUp: penUp, penDown: penDown  )
+                SidebarView(modelNumber:$modelNumber, modelIndex: $modelIndex, reorderIndex: $reorderIndex, reorderNumber: $reorderNumber, goHome: goHome, walkX: walkX, walkY: walkY, enableMotors: enableMotors, disableMotors: disableMotors, penUp: penUp, penDown: penDown, hasFile: currentFileURL != nil  )
                 DragDropContentView(onFileDropped: onFilePathChanged)
             }.frame(maxWidth: .infinity)
-            
+         CommandBarView(startPlot: startPlot, resumeFromLocation: resumeFromLocation, resumeFromHome: resumeFromHome, hasFile: currentFileURL != nil)
         }
-
-//        VStack(alignment: .trailing) {
-//            Image(systemName: "globe")
-//                .imageScale(.large)
-//                .foregroundColor(.accentColor)
-//            Text(output)
-            
-           
-           
-            
-            
-//            Button("Version", action: version)
-//            Button("Preview", action: preview)
-            
-            
-//        }
-        
         
     }
     

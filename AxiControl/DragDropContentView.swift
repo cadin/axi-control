@@ -19,7 +19,7 @@ struct DragDropContentView: View {
                                .resizable()
                                .aspectRatio(contentMode: .fit)
                        } else {
-                           Text("Drop an image file here")
+                           Text("Drop an SVG file here")
                                .padding()
                        }
        }.frame(maxWidth: .infinity)
