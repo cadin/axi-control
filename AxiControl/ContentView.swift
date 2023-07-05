@@ -16,7 +16,8 @@ struct ContentView: View {
     @AppStorage("reorderIndex") var reorderIndex = 1
     
     @State var isRunning = false
-    @State var output = "Hello AxiControl"
+    @State var outputMessage = ""
+    @State var errorMessage = ""
     
     @State var currentFileURL: URL?
     
@@ -32,18 +33,24 @@ struct ContentView: View {
     
     func runAxCLI(args: [String]) {
         let outputPipe = Pipe()
+        let errorPipe = Pipe()
         self.isRunning = true
         let task = Process()
         task.executableURL = axiURL
         task.standardOutput = outputPipe
+        task.standardError = errorPipe
         task.arguments = args + ["--model", String(modelNumber), "--reordering", String(reorderNumber)]
         task.terminationHandler = { _ in self.isRunning = false }
         
         try! task.run()
         
         let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-        output = String(decoding: outputData, as: UTF8.self)
-        print(output)
+        outputMessage = String(decoding: outputData, as: UTF8.self)
+        
+        let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+        errorMessage = String(decoding: errorData, as: UTF8.self)
+        print(outputMessage)
+        print(errorMessage)
     
     }
     
@@ -112,8 +119,8 @@ struct ContentView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0){
-            HStack(){
-                SidebarView(modelNumber:$modelNumber, modelIndex: $modelIndex, reorderIndex: $reorderIndex, reorderNumber: $reorderNumber, goHome: goHome, walkX: walkX, walkY: walkY, enableMotors: enableMotors, disableMotors: disableMotors, penUp: penUp, penDown: penDown, hasFile: currentFileURL != nil  )
+            HStack(spacing: 0){
+                SidebarView(modelNumber:$modelNumber, modelIndex: $modelIndex, reorderIndex: $reorderIndex, reorderNumber: $reorderNumber, goHome: goHome, walkX: walkX, walkY: walkY, enableMotors: enableMotors, disableMotors: disableMotors, penUp: penUp, penDown: penDown, hasFile: currentFileURL != nil, output: outputMessage, error: errorMessage  )
                 DragDropContentView(onFileDropped: onFilePathChanged)
             }.frame(maxWidth: .infinity)
          CommandBarView(startPlot: startPlot, resumeFromLocation: resumeFromLocation, resumeFromHome: resumeFromHome, hasFile: currentFileURL != nil)

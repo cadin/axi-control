@@ -46,6 +46,9 @@ struct SidebarView: View {
     
     var hasFile: Bool
     
+    var output: String
+    var error:String
+    
     func onModelSelect(_ index: Int) {
         let num = models[index]["value"] as! Int
         modelNumber = num;
@@ -61,7 +64,8 @@ struct SidebarView: View {
     var body: some View {
         
         
-        VStack(alignment: .trailing) {
+        VStack() {
+            VStack(alignment: .trailing) {
             
             HStack {
                 Text("Model:").font(.subheadline).foregroundColor(Color.black.opacity(0.5))
@@ -116,6 +120,7 @@ struct SidebarView: View {
                 }.frame(width: controlWidth)
                 
             }
+            Spacer().frame(height: 32)
             
             HStack {
                 Text("Reorder:").font(.subheadline).foregroundColor(Color.black.opacity(0.5))
@@ -129,12 +134,16 @@ struct SidebarView: View {
                 }.frame(width: controlWidth )
                 
             }
+            }.padding()
             
             Spacer()
             
+            
+            ConsoleView(output: output, error: error)
+            
         }
-        .padding()
-        .frame(minWidth: 264, maxHeight: .infinity)
+        
+        .frame(minWidth: 266, maxWidth: 266, maxHeight: .infinity)
         .background(Color.white)
         .overlay(Divider().background(Color(red: 0.88, green: 0.88, blue: 0.88)), alignment: .trailing)
         
@@ -147,6 +156,6 @@ func nullCommand() {}
 struct SidebarView_Previews: PreviewProvider {
     
 static var previews: some View {
-    SidebarView( modelNumber: .constant(1), modelIndex: .constant(1), reorderIndex: .constant(0), reorderNumber: .constant(1), goHome: nullCommand, walkX: nullCommand, walkY: nullCommand, enableMotors: nullCommand, disableMotors: nullCommand, penUp: nullCommand, penDown: nullCommand, hasFile: true)
+    SidebarView( modelNumber: .constant(1), modelIndex: .constant(1), reorderIndex: .constant(0), reorderNumber: .constant(1), goHome: nullCommand, walkX: nullCommand, walkY: nullCommand, enableMotors: nullCommand, disableMotors: nullCommand, penUp: nullCommand, penDown: nullCommand, hasFile: true, output: "", error: "")
 }
 }

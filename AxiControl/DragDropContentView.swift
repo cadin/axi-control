@@ -14,15 +14,27 @@ struct DragDropContentView: View {
 
     var body: some View {
        VStack {
-           if let url = fileURL {
+           
+               if let url = fileURL {
+                   VStack (spacing: 16){
+                       VStack {
                            loadImage(from: url)
                                .resizable()
                                .aspectRatio(contentMode: .fit)
-                       } else {
-                           Text("Drop an SVG file here")
-                               .padding()
                        }
-       }.frame(maxWidth: .infinity)
+                       .background(Color.white
+                           .shadow( radius: 2, x: 0, y: 1)
+                         )
+                       
+                       Text(url.lastPathComponent)
+                   }
+                   
+               } else {
+                   Text("Drop an SVG file here")
+                       .padding()
+               }
+           
+       }.frame(maxWidth: .infinity, maxHeight: .infinity)
        .dropDestination(for:URL.self) { items, _ in
            guard let item = items.first else { return false}
            
@@ -30,6 +42,7 @@ struct DragDropContentView: View {
            onFileDropped(fileURL!)
            return true
        }
+       .padding()
     }
     
     func loadImage(from url: URL) -> Image {

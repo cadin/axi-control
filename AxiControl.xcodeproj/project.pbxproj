@@ -14,6 +14,7 @@
 		0558F3602A4A5E9A00D6F831 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0558F35F2A4A5E9A00D6F831 /* Preview Assets.xcassets */; };
 		058FA4A92A549CD600A1871A /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058FA4A82A549CD600A1871A /* SidebarView.swift */; };
 		058FA4AB2A54E5EC00A1871A /* CommandBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058FA4AA2A54E5EC00A1871A /* CommandBarView.swift */; };
+		058FA4AD2A54F17D00A1871A /* ConsoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058FA4AC2A54F17D00A1871A /* ConsoleView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		0558F3612A4A5E9A00D6F831 /* AxiControl.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AxiControl.entitlements; sourceTree = "<group>"; };
 		058FA4A82A549CD600A1871A /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		058FA4AA2A54E5EC00A1871A /* CommandBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandBarView.swift; sourceTree = "<group>"; };
+		058FA4AC2A54F17D00A1871A /* ConsoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 				0520C01C2A50C6F8006133DD /* DragDropContentView.swift */,
 				058FA4A82A549CD600A1871A /* SidebarView.swift */,
 				058FA4AA2A54E5EC00A1871A /* CommandBarView.swift */,
+				058FA4AC2A54F17D00A1871A /* ConsoleView.swift */,
 			);
 			path = AxiControl;
 			sourceTree = "<group>";
@@ -154,6 +157,7 @@
 				058FA4A92A549CD600A1871A /* SidebarView.swift in Sources */,
 				058FA4AB2A54E5EC00A1871A /* CommandBarView.swift in Sources */,
 				0520C01D2A50C6F8006133DD /* DragDropContentView.swift in Sources */,
+				058FA4AD2A54F17D00A1871A /* ConsoleView.swift in Sources */,
 				0558F3592A4A5E9800D6F831 /* AxiControlApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
