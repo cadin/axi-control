@@ -14,12 +14,18 @@ struct ContentView: View {
     
     @AppStorage("reorderNumber") var reorderNumber = 1
     @AppStorage("reorderIndex") var reorderIndex = 1
+    @AppStorage("runWebhook") var runWebhook = false
+    @AppStorage("webhookURL") var webhookURL = ""
+    
+    @State var removeHiddenLines = false
     
     @State var isRunning = false
     @State var outputMessage = ""
     @State var errorMessage = ""
     
     @State var currentFileURL: URL?
+    
+    @State var showPopover = false
     
     let axiURL = URL(fileURLWithPath: "/usr/local/bin/axicli")
     
@@ -35,11 +41,22 @@ struct ContentView: View {
         let outputPipe = Pipe()
         let errorPipe = Pipe()
         self.isRunning = true
+            
+        var newArgs = args + ["--model", String(modelNumber), "--reordering", String(reorderNumber)]
+        if(webhookURL.count > 0){
+            newArgs = newArgs + ["--webhook", "--webhook_url", webhookURL]
+        }
+        
+        if(removeHiddenLines){
+            newArgs = newArgs + ["--hiding"]
+        }
+        
         let task = Process()
         task.executableURL = axiURL
         task.standardOutput = outputPipe
         task.standardError = errorPipe
-        task.arguments = args + ["--model", String(modelNumber), "--reordering", String(reorderNumber)]
+        
+        task.arguments = newArgs
         task.terminationHandler = { _ in self.isRunning = false }
         
         try! task.run()
@@ -120,7 +137,7 @@ struct ContentView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0){
             HStack(spacing: 0){
-                SidebarView(modelNumber:$modelNumber, modelIndex: $modelIndex, reorderIndex: $reorderIndex, reorderNumber: $reorderNumber, goHome: goHome, walkX: walkX, walkY: walkY, enableMotors: enableMotors, disableMotors: disableMotors, penUp: penUp, penDown: penDown, hasFile: currentFileURL != nil, output: outputMessage, error: errorMessage  )
+                SidebarView(modelNumber:$modelNumber, modelIndex: $modelIndex, reorderIndex: $reorderIndex, reorderNumber: $reorderNumber, removeHiddenLines: $removeHiddenLines, runWebhook: $runWebhook, webhookURL: $webhookURL, showPopover: $showPopover, goHome: goHome, walkX: walkX, walkY: walkY, enableMotors: enableMotors, disableMotors: disableMotors, penUp: penUp, penDown: penDown, hasFile: currentFileURL != nil, output: outputMessage, error: errorMessage  )
                 DragDropContentView(onFileDropped: onFilePathChanged)
             }.frame(maxWidth: .infinity)
          CommandBarView(startPlot: startPlot, resumeFromLocation: resumeFromLocation, resumeFromHome: resumeFromHome, hasFile: currentFileURL != nil)

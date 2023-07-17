@@ -36,6 +36,12 @@ struct SidebarView: View {
     @Binding var reorderIndex: Int
     @Binding var reorderNumber: Int
     
+    @Binding var removeHiddenLines: Bool
+    @Binding var runWebhook: Bool
+    @Binding var webhookURL: String
+    
+    @Binding var showPopover:Bool 
+    
     var goHome:() -> Void
     var walkX:() -> Void
     var walkY:() -> Void
@@ -48,6 +54,8 @@ struct SidebarView: View {
     
     var output: String
     var error:String
+    
+    @State var textFieldDisabled = true
     
     func onModelSelect(_ index: Int) {
         let num = models[index]["value"] as! Int
@@ -67,74 +75,108 @@ struct SidebarView: View {
         VStack() {
             VStack(alignment: .trailing) {
             
-            HStack {
-                Text("Model:").font(.subheadline).foregroundColor(Color.black.opacity(0.5))
-                Menu (models[modelIndex]["name"] as? String ?? "Select a model"){
-                    ForEach(models.indices, id: \.self) { index in
-                        Button(action: { onModelSelect(index) }) {
-                            Text(models[index]["name"] as? String ?? "")
+                HStack {
+                    Text("Model:").font(.subheadline).foregroundColor(Color.black.opacity(0.5))
+                    Menu (models[modelIndex]["name"] as? String ?? "Select a model"){
+                        ForEach(models.indices, id: \.self) { index in
+                            Button(action: { onModelSelect(index) }) {
+                                Text(models[index]["name"] as? String ?? "")
+                            }
                         }
-                    }
+                        
+                    }.frame(width: controlWidth )
+                }
+                
+                HStack {
+                    Text("Pen:").font(.subheadline).foregroundColor(Color.black.opacity(0.5))
+                    HStack {
+                        
+                        Button(action: penUp) {
+                            Text("Up").frame(maxWidth: .infinity)
+                        }
+                        Button(action: penDown) {
+                            Text("Down").frame(maxWidth: .infinity)
+                        }
+                    }.frame(width: controlWidth)
+                }
+                
+                HStack {
+                    Text("Motors:").font(.subheadline).foregroundColor(Color.black.opacity(0.5))
+                    HStack {
+                        
+                        Button(action: enableMotors) {
+                            Text("Enable").frame(maxWidth: .infinity)
+                        }
+                        Button(action: disableMotors) {
+                            Text("Disable").frame(maxWidth: .infinity)
+                        }
+                    }.frame(width: controlWidth)
+                }
+                
+                HStack {
+                    Text("Walk:").font(.subheadline).foregroundColor(Color.black.opacity(0.5))
+                    HStack {
+                        Button(action: goHome) {
+                            Text("Home").frame(maxWidth: .infinity)
+                        }
+                        Button(action: walkX) {
+                            Text("Max X").frame(maxWidth: .infinity)
+                        }
+                        Button(action: walkY) {
+                            Text("Max Y").frame(maxWidth: .infinity)
+                        }
+                    }.frame(width: controlWidth)
                     
-                }.frame(width: controlWidth )
-            }
-            
-            HStack {
-                Text("Pen:").font(.subheadline).foregroundColor(Color.black.opacity(0.5))
+                }
+                Spacer().frame(height: 32)
+                
+                HStack {
+                    Text("Reorder:").font(.subheadline).foregroundColor(Color.black.opacity(0.5))
+                    Menu (reorderOptions[reorderIndex]["name"] as? String ?? "Select"){
+                        ForEach(reorderOptions.indices, id: \.self) { index in
+                            Button(action: { onReorderSelect(index) }) {
+                                Text(reorderOptions[index]["name"] as? String ?? "")
+                            }
+                        }
+                        
+                    }.frame(width: controlWidth )
+                    
+                }
+                
                 HStack {
                     
-                    Button(action: penUp) {
-                        Text("Up").frame(maxWidth: .infinity)
+                    Toggle(isOn: $removeHiddenLines) {
+                        Text("Remove hidden lines")
                     }
-                    Button(action: penDown) {
-                        Text("Down").frame(maxWidth: .infinity)
-                    }
-                }.frame(width: controlWidth)
-            }
-            
-            HStack {
-                Text("Motors:").font(.subheadline).foregroundColor(Color.black.opacity(0.5))
-                HStack {
-                    
-                    Button(action: enableMotors) {
-                        Text("Enable").frame(maxWidth: .infinity)
-                    }
-                    Button(action: disableMotors) {
-                        Text("Disable").frame(maxWidth: .infinity)
-                    }
-                }.frame(width: controlWidth)
-            }
-            
-            HStack {
-                Text("Walk:").font(.subheadline).foregroundColor(Color.black.opacity(0.5))
-                HStack {
-                    Button(action: goHome) {
-                        Text("Home").frame(maxWidth: .infinity)
-                    }
-                    Button(action: walkX) {
-                        Text("Max X").frame(maxWidth: .infinity)
-                    }
-                    Button(action: walkY) {
-                        Text("Max Y").frame(maxWidth: .infinity)
-                    }
+                    Spacer()
                 }.frame(width: controlWidth)
                 
-            }
-            Spacer().frame(height: 32)
-            
-            HStack {
-                Text("Reorder:").font(.subheadline).foregroundColor(Color.black.opacity(0.5))
-                Menu (reorderOptions[reorderIndex]["name"] as? String ?? "Select"){
-                    ForEach(reorderOptions.indices, id: \.self) { index in
-                        Button(action: { onReorderSelect(index) }) {
-                            Text(reorderOptions[index]["name"] as? String ?? "")
-                        }
-                    }
+                HStack {
+//                    Text("Webhook:").font(.subheadline).foregroundColor(Color.black.opacity(0.5))
+////                    TextField("Enter URL", text: $webhookURL, onCommit: {
+////                                                        DispatchQueue.main.async {
+////                                                            NSApp.keyWindow?.makeFirstResponder(nil)
+////                                                        }
+////                    }).frame(width: controlWidth).disabled(textFieldDisabled)     // << here !!
+////                        .onAppear {
+////                           DispatchQueue.main.async { textFieldDisabled = false } // << here !!
+////                        }
+                    Toggle(isOn: $runWebhook) {
+                        Text("Run webhook")
+                    }.disabled(webhookURL.count < 1)
+                    Spacer()
                     
-                }.frame(width: controlWidth )
+                    Button("􀣌") {
+                        self.showPopover = true
+                                }.popover(
+                                    isPresented: $showPopover,
+                                    arrowEdge: .bottom
+                                ) { WebhookPopoverView(webhookURL: $webhookURL) }
+                }.textFieldStyle(.roundedBorder).frame(width: controlWidth)
                 
-            }
             }.padding()
+            
+            
             
             Spacer()
             
@@ -143,7 +185,7 @@ struct SidebarView: View {
             
         }
         
-        .frame(minWidth: 266, maxWidth: 266, maxHeight: .infinity)
+        .frame(minWidth: 274, maxWidth: 274, maxHeight: .infinity)
         .background(Color.white)
         .overlay(Divider().background(Color(red: 0.88, green: 0.88, blue: 0.88)), alignment: .trailing)
         
@@ -153,9 +195,9 @@ struct SidebarView: View {
 
 func nullCommand() {}
 
-struct SidebarView_Previews: PreviewProvider {
-    
-static var previews: some View {
-    SidebarView( modelNumber: .constant(1), modelIndex: .constant(1), reorderIndex: .constant(0), reorderNumber: .constant(1), goHome: nullCommand, walkX: nullCommand, walkY: nullCommand, enableMotors: nullCommand, disableMotors: nullCommand, penUp: nullCommand, penDown: nullCommand, hasFile: true, output: "", error: "")
-}
-}
+//struct SidebarView_Previews: PreviewProvider {
+//
+//static var previews: some View {
+//    SidebarView( modelNumber: .constant(1), modelIndex: .constant(1), reorderIndex: .constant(0), reorderNumber: .constant(1), removeHiddenLines: .constant(true), webhookURL: .constant(""), goHome: nullCommand, walkX: nullCommand, walkY: nullCommand, enableMotors: nullCommand, disableMotors: nullCommand, penUp: nullCommand, penDown: nullCommand, hasFile: true, output: "", error: "")
+//}
+//}
