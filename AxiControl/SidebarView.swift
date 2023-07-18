@@ -53,7 +53,6 @@ struct SidebarView: View {
     var hasFile: Bool
     
     var output: String
-    var error:String
     
     @State var textFieldDisabled = true
     
@@ -181,7 +180,7 @@ struct SidebarView: View {
             Spacer()
             
             
-            ConsoleView(output: output, error: error)
+            ConsoleView(output: output)
             
         }
         

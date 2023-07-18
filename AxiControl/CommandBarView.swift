@@ -14,7 +14,7 @@ struct CommandBarView: View {
     var resumeFromHome:() -> Void
     
     var hasFile: Bool
-//    var hasOutputFile: Bool
+    var hasOutputFile: Bool
     
     
     var body: some View {
@@ -23,10 +23,10 @@ struct CommandBarView: View {
                 HStack {
                     Button(action: resumeFromLocation) {
                         Text("Resume")
-                    }.disabled(!hasFile)
+                    }.disabled(!hasOutputFile)
                     Button(action: resumeFromHome) {
                         Text("Resume from home")
-                    }.disabled(!hasFile)
+                    }.disabled(!hasOutputFile)
                 }
                 
                 Spacer()
@@ -51,6 +51,6 @@ struct CommandBarView: View {
 struct CommandBarView_Previews: PreviewProvider {
     
 static var previews: some View {
-    CommandBarView(startPlot: nullCommand, resumeFromLocation: nullCommand, resumeFromHome: nullCommand, hasFile: true)
+    CommandBarView(startPlot: nullCommand, resumeFromLocation: nullCommand, resumeFromHome: nullCommand, hasFile: true, hasOutputFile: false)
 }
 }
