@@ -33,6 +33,9 @@ struct ContentView: View {
     @State var error = ""
     @State var showError = false
     
+    @State private var runningProcess: Process?
+    @State var isPlotting = false
+    
     let axiURL = URL(fileURLWithPath: "/usr/local/bin/axicli")
     
     func onFilePathChanged(url: URL) {
@@ -46,40 +49,48 @@ struct ContentView: View {
     }
     
     func runAxiCLI(args: [String]) {
-        let outputPipe = Pipe()
-        let errorPipe = Pipe()
-        self.isRunning = true
-            
-        var newArgs = args + ["--model", String(modelNumber), "--reordering", String(reorderNumber)]
-        if(webhookURL.count > 0){
-            newArgs = newArgs + ["--webhook", "--webhook_url", webhookURL]
-        }
-        
-        if(removeHiddenLines){
-            newArgs = newArgs + ["--hiding"]
-        }
-        
-        print(newArgs.joined(separator: " "))
-        
-        let task = Process()
-        task.executableURL = axiURL
-        task.standardOutput = outputPipe
-        task.standardError = errorPipe
-        
-        task.arguments = newArgs
-        task.terminationHandler = { _ in self.isRunning = false }
-        
-        try! task.run()
-        
-        let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-        outputMessage = String(decoding: outputData, as: UTF8.self)
-        
-        let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
-        errorMessage = String(decoding: errorData, as: UTF8.self)
-
-
-        if(errorMessage.count > 0){
-            showError = true
+        Task {
+            do {
+                let outputPipe = Pipe()
+                let errorPipe = Pipe()
+                self.isRunning = true
+                
+                var newArgs = args + ["--model", String(modelNumber), "--reordering", String(reorderNumber)]
+                if(webhookURL.count > 0){
+                    newArgs = newArgs + ["--webhook", "--webhook_url", webhookURL]
+                }
+                
+                if(removeHiddenLines){
+                    newArgs = newArgs + ["--hiding"]
+                }
+                
+                print(newArgs.joined(separator: " "))
+                
+                let task = Process()
+                task.executableURL = axiURL
+                task.standardOutput = outputPipe
+                task.standardError = errorPipe
+                
+                task.arguments = newArgs
+                task.terminationHandler = { _ in self.isRunning = false; self.isPlotting = false }
+                
+                try task.run()
+                
+                runningProcess = task
+                
+                let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+                outputMessage = String(decoding: outputData, as: UTF8.self)
+                
+                let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+                errorMessage = String(decoding: errorData, as: UTF8.self)
+                
+                
+                if(errorMessage.count > 0){
+                    showError = true
+                }
+            } catch {
+                print("error sending command")
+            }
         }
         
         print(outputMessage)
@@ -149,9 +160,15 @@ struct ContentView: View {
         if let url = currentFileURL {
             if let original = originalFileURL {
                 let outputPath = getNewOutputPath(path: original)
+                isPlotting = true
                 runAxiCLI(args: [url.path, "-o", outputPath])
             }
         }
+    }
+    
+    func terminatePlot() {
+        runningProcess?.terminate()
+        goHome()
     }
     
     func resumeFromLocation() {
@@ -159,6 +176,7 @@ struct ContentView: View {
             let url = getCurrentOutputPath(path: original)
             let outputPath = getNewOutputPath(path: original)
             currentFileURL = URL(string: url)
+            isPlotting = true
             runAxiCLI(args: [url, "--mode", "res_plot", "-o", outputPath])
         }
     }
@@ -190,7 +208,10 @@ struct ContentView: View {
         }.alert(errorMessage, isPresented: $showError) {
             Button("OK", role: .cancel) { }
         }
-        
+//        .alert("Plot is running", isPresented: $isRunning) {
+//            Button("Cancel Plot", role: .cancel, action: terminatePlot)
+//        }
+//        
     }
     
 }
