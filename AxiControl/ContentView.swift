@@ -28,7 +28,7 @@ struct ContentView: View {
     
     @State var showPopover = false
     
-    @State var tempCount = 1
+    @State var tempCount = 0
     
     @State var error = ""
     @State var showError = false
@@ -38,7 +38,7 @@ struct ContentView: View {
     func onFilePathChanged(url: URL) {
         currentFileURL = url
         originalFileURL = url
-        tempCount = 1
+        tempCount = 0
     }
     
     func goHome() {
