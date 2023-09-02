@@ -25,7 +25,7 @@ struct CommandBarView: View {
                         Text("Resume")
                     }.disabled(!hasOutputFile)
                     Button(action: resumeFromHome) {
-                        Text("Resume from home")
+                        Text("Save home")
                     }.disabled(!hasOutputFile)
                 }
                 

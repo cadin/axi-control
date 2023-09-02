@@ -8,6 +8,17 @@
 import SwiftUI
 
 
+let plotDimensions: [[String: Double]] = [
+    ["x": 0,     "y": 0],     // models are 1-indexed
+    ["x": 11.81, "y": 8.58],  // V2, V3, SE/A4
+    ["x": 16.93, "y": 11.69], // V3/A3, SE/A3
+    ["x": 23.42, "y": 8.58],  // V3 XLX
+    ["x": 6.3,   "y": 4],     // MiniKit
+    ["x": 34.02, "y": 23.39], // SE/A1
+    ["x": 23.39, "y": 17.01], // SE/A2
+    ["x": 7.48,  "y": 5.51]   // V3/B6
+]
+
 struct ContentView: View {
     @AppStorage("modelNumber") var modelNumber = 1
     @AppStorage("modelIndex") var modelIndex = 1
@@ -122,13 +133,15 @@ struct ContentView: View {
     }
     
     func walkX() {
-        // TODO: get max dist for selected model
-        sendAxiCommand("-m manual -M walk_x --dist 16.5")
+        if let dist = plotDimensions[modelNumber]["x"] {
+            sendAxiCommand("-m manual -M walk_x --dist \(dist)")
+        }
     }
     
     func walkY() {
-        // TODO: get max dist for selected model
-        sendAxiCommand("-m manual -M walk_y --dist 16.5")
+        if let dist = plotDimensions[modelNumber]["y"] {
+            sendAxiCommand("-m manual -M walk_y --dist \(dist)")
+        }
     }
     
     func preview() {

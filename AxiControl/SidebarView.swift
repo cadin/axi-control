@@ -15,6 +15,7 @@ let models: [[String: Any]] = [
     ["name": "AxiDraw V3", "value": 1],
     ["name": "AxiDraw SE/A4", "value": 1],
     ["name": "AxiDraw V3/A3", "value": 2],
+    ["name": "AxiDraw SE/A3", "value": 2],
     ["name": "AxiDraw V3 XLX", "value": 3],
     ["name": "AxiDraw MiniKit", "value": 4],
     ["name": "AxiDraw SE/A1", "value": 5],
