@@ -100,7 +100,8 @@ struct ContentView: View {
                     showError = true
                 }
             } catch {
-                print("error sending command")
+                errorMessage = "Error sending command"
+                showError = true
             }
         }
         
