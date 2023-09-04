@@ -19,7 +19,7 @@ See the full installation instructions on [AxiDraw.com](https://www.axidraw.com/
 
 ### 2. Download AxiControl
 
-Download the `AxiControl.zip` file from the [Releases](https://github.com/cadin/axi-control/releases/tag/v1.0) page.
+Download the [`AxiControl.zip`](https://github.com/cadin/axi-control/releases/download/v1.0/AxiControl.zip) file from the [Releases](https://github.com/cadin/axi-control/releases/tag/v1.0) page.
 
 Unzip and move the app to your Applications folder.
 
