@@ -49,6 +49,17 @@ You can also choose **Save home** when paused. This will move the carriage to th
 
 **Be sure you have your correct AxiDraw model selected**. Otherwise you may damage your device by walking it outside the maximum range.
 
+### Speed control
+
+The Speed slider controls the speed limit for the XY carriage when the pen is down. This value is expressed as a percentage of maximum travel speed.
+
+### Layers control
+
+Specify a number which indicates which layer (or layers) will be plotted when plotting in layers mode. See the [AxiDraw CLI docs](https://www.axidraw.com/doc/cli_api/#layer) for more info.
+
+Note: Layers are not a native feature of SVG. You probably have to create your SVGs in Inkscape to create files with usable layer numbers.  
+See _[Adding layers outside of Inkscape](https://wiki.evilmadscientist.com/AxiDraw_Layer_Control#Adding_layers_outside_of_Inkscape)_ on the EMS wiki.
+
 ### Webhooks
 
 Run a webhook when your plot completes. You can easily set up a webhook at [IFTTT](https://ifttt.com/maker_webhooks) to send you a notification when your plot completes.
