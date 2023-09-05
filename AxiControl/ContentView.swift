@@ -71,10 +71,7 @@ struct ContentView: View {
                 let outputPipe = Pipe()
                 let errorPipe = Pipe()
                 self.isRunning = true
-                
-                
-                
-                
+
                 print(args.joined(separator: " "))
                 
                 let task = Process()
@@ -116,6 +113,11 @@ struct ContentView: View {
         }
     }
     
+    func showLayerError() {
+        errorMessage = "Invalid layer number"
+        showError = true
+    }
+    
     func sendAxiCommand(_ cmd: String, withFile path: String) {
         let args = cmd.components(separatedBy: " ")
         
@@ -125,7 +127,13 @@ struct ContentView: View {
             if let layerNum = Int(singleLayerNum){
                 if(layerNum > 0 && layerNum <= 1000){
                     newArgs = newArgs + ["--mode", "layers", "--layer", "\(layerNum)"]
+                } else {
+                    showLayerError()
+                    return
                 }
+            } else {
+                showLayerError()
+                return
             }
         }
         

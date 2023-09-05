@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 let controlWidth = 180.0
 
@@ -73,6 +74,14 @@ struct SidebarView: View {
         reorderNumber = num
         reorderIndex = index
     }
+    
+    private let numberFormatter: NumberFormatter = {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            return formatter
+        }()
+    
+    private let validCharacterSet = CharacterSet.decimalDigits
     
     var body: some View {
         
@@ -193,6 +202,14 @@ struct SidebarView: View {
                     TextField("", text: $layerNum)
                         .onChange(of: layerNum) { _ in
                             onPreviewInvalidated()
+                        }
+                        .onReceive(Just(layerNum)) { newValue in
+                            let filteredValue = newValue.filter { validCharacterSet.contains($0.unicodeScalars.first!) }
+                            if numberFormatter.number(from: filteredValue) != nil {
+                                layerNum = filteredValue
+                            } else {
+                                layerNum = ""
+                            }
                         }
                         .frame(maxWidth: 64)
                         .disabled(!singleLayer)
