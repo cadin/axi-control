@@ -95,7 +95,14 @@ struct ContentView: View {
                         if(errorMessage.count > 0){
                             // time estimate is sent through standard error
                             if(errorMessage.hasPrefix("Estimated print time:")) {
-                                outputMessage = errorMessage.trimmingCharacters(in: .whitespacesAndNewlines)
+                                var splits = errorMessage.split(separator: "\n\n")
+                                outputMessage = splits[0].trimmingCharacters(in: .whitespacesAndNewlines)
+                                
+                                if(splits.count > 1){
+                                    splits.removeFirst(1)
+                                    errorMessage = splits.joined(separator: "\n\n")
+                                    showError = true
+                                }
                             } else {
                                 showError = true
                             }
