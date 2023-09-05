@@ -72,8 +72,17 @@ struct ContentView: View {
                 let errorPipe = Pipe()
                 self.isRunning = true
                 
-                var newArgs = args + ["--model", String(modelNumber), "--reordering", String(reorderNumber)]
-                if(webhookURL.count > 0){
+                var newArgs = args + ["--model", String(modelNumber), "--reordering", String(reorderNumber), "--speed_pendown", String(Int(speed)) ]
+                
+                if(plotSingleLayer){
+                    if let layerNum = Int(singleLayerNum){
+                        if(layerNum > 0 && layerNum <= 1000){
+                            newArgs = newArgs + ["--layer", "\(layerNum)"]
+                        }
+                    }
+                }
+                
+                if(runWebhook && webhookURL.count > 0){
                     newArgs = newArgs + ["--webhook", "--webhook_url", webhookURL]
                 }
                 
