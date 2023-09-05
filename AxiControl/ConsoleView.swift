@@ -18,7 +18,10 @@ struct ConsoleView: View {
         if(output.count > 0){
             VStack(){
                 if(output.count > 0){
-                    Text(output).font(monoFont).frame(maxWidth: .infinity, alignment: .leading)
+                    Text(output)
+                        .font(monoFont)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .textSelection(.enabled)
                 }
 
             }

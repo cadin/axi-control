@@ -12,6 +12,7 @@ struct CommandBarView: View {
     var startPlot:() -> Void
     var resumeFromLocation:() -> Void
     var resumeFromHome:() -> Void
+    var runPreview:() -> Void
     
     var hasFile: Bool
     var hasOutputFile: Bool
@@ -31,6 +32,9 @@ struct CommandBarView: View {
                 
                 Spacer()
                 
+                Button(action: runPreview){
+                    Text("Preview")
+                }.disabled(!hasFile)
                 Button(action: startPlot) {
                     Text("Start plot")
                 }
@@ -51,6 +55,6 @@ struct CommandBarView: View {
 struct CommandBarView_Previews: PreviewProvider {
     
 static var previews: some View {
-    CommandBarView(startPlot: nullCommand, resumeFromLocation: nullCommand, resumeFromHome: nullCommand, hasFile: true, hasOutputFile: false)
+    CommandBarView(startPlot: nullCommand, resumeFromLocation: nullCommand, resumeFromHome: nullCommand, runPreview: nullCommand, hasFile: true, hasOutputFile: false)
 }
 }

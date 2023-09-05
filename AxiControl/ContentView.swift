@@ -83,22 +83,32 @@ struct ContentView: View {
                 task.standardError = errorPipe
                 
                 task.arguments = newArgs
-                task.terminationHandler = { _ in self.isRunning = false; self.isPlotting = false }
+                
+                task.terminationHandler = { _ in
+                    DispatchQueue.main.async {
+                        self.isRunning = false
+                        self.isPlotting = false
+
+                        let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+                        outputMessage = String(decoding: outputData, as: UTF8.self)
+
+                        let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+                        errorMessage = String(decoding: errorData, as: UTF8.self)
+
+                        if(errorMessage.count > 0){
+                            // time estimate is sent through standard error
+                            if(errorMessage.hasPrefix("Estimated print time:")) {
+                                outputMessage = errorMessage
+                            } else {
+                                showError = true
+                            }
+                        }
+                    }
+                }
                 
                 try task.run()
-                
                 runningProcess = task
                 
-                let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-                outputMessage = String(decoding: outputData, as: UTF8.self)
-                
-                let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
-                errorMessage = String(decoding: errorData, as: UTF8.self)
-                
-                
-                if(errorMessage.count > 0){
-                    showError = true
-                }
             } catch {
                 errorMessage = "Error sending command"
                 showError = true
@@ -145,7 +155,7 @@ struct ContentView: View {
         }
     }
     
-    func preview() {
+    func runPreview() {
         if let url = currentFileURL {
             sendAxiCommand("-v --report_time", withFile: url.path)
         }
@@ -218,7 +228,7 @@ struct ContentView: View {
                 SidebarView(modelNumber:$modelNumber, modelIndex: $modelIndex, reorderIndex: $reorderIndex, reorderNumber: $reorderNumber, removeHiddenLines: $removeHiddenLines, runWebhook: $runWebhook, webhookURL: $webhookURL, showPopover: $showPopover, goHome: goHome, walkX: walkX, walkY: walkY, enableMotors: enableMotors, disableMotors: disableMotors, penUp: penUp, penDown: penDown, hasFile: currentFileURL != nil, output: outputMessage)
                 DragDropContentView(onFileDropped: onFilePathChanged)
             }.frame(maxWidth: .infinity)
-         CommandBarView(startPlot: startPlot, resumeFromLocation: resumeFromLocation, resumeFromHome: resumeFromHome, hasFile: currentFileURL != nil, hasOutputFile: outputFileExists())
+            CommandBarView(startPlot: startPlot, resumeFromLocation: resumeFromLocation, resumeFromHome: resumeFromHome, runPreview: runPreview, hasFile: currentFileURL != nil, hasOutputFile: outputFileExists())
         }.alert(errorMessage, isPresented: $showError) {
             Button("OK", role: .cancel) { }
         }
