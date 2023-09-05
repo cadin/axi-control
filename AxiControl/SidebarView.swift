@@ -42,6 +42,10 @@ struct SidebarView: View {
     @Binding var webhookURL: String
     
     @Binding var showPopover:Bool
+    @Binding var speed: Double
+    
+    @Binding var singleLayer: Bool
+    @Binding var layerNum: String
     
     var goHome:() -> Void
     var walkX:() -> Void
@@ -135,6 +139,22 @@ struct SidebarView: View {
                 Spacer().frame(height: 32)
                 
                 HStack {
+                    Text("Speed:").font(.subheadline).foregroundColor(Color.black.opacity(0.5))
+                    Slider(
+                        value: $speed,
+                        in: 1...110,
+                        label: {
+                            Text("\(Int(speed))")
+                                .frame(width: 24, alignment: .leading)
+                        }
+                    )
+                    .frame(width: controlWidth )
+                        .onChange(of: speed) { _ in
+                            onPreviewInvalidated()
+                        }
+                }
+                
+                HStack {
                     Text("Reorder:").font(.subheadline).foregroundColor(Color.black.opacity(0.5))
                     Menu (reorderOptions[reorderIndex]["name"] as? String ?? "Select"){
                         ForEach(reorderOptions.indices, id: \.self) { index in
@@ -150,6 +170,7 @@ struct SidebarView: View {
                     
                 }
                 
+                
                 HStack {
                     
                     Toggle(isOn: $removeHiddenLines) {
@@ -159,6 +180,23 @@ struct SidebarView: View {
                         onPreviewInvalidated()
                     }
                     Spacer()
+                }.frame(width: controlWidth)
+                
+                HStack {
+                    Toggle(isOn: $singleLayer) {
+                        Text("Single layer").frame(minWidth: 80, alignment: .leading)
+                    }
+                    .onChange(of: singleLayer) { _ in
+                        onPreviewInvalidated()
+                    }
+                    Spacer()
+                    TextField("", text: $layerNum)
+                        .onChange(of: layerNum) { _ in
+                            onPreviewInvalidated()
+                        }
+                        .frame(maxWidth: 64)
+                        .disabled(!singleLayer)
+                    
                 }.frame(width: controlWidth)
                 
                 HStack {

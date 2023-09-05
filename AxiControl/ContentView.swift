@@ -27,6 +27,8 @@ struct ContentView: View {
     @AppStorage("reorderIndex") var reorderIndex = 1
     @AppStorage("runWebhook") var runWebhook = false
     @AppStorage("webhookURL") var webhookURL = ""
+    @AppStorage("speed") var speed = 25.0
+    
     
     @State var removeHiddenLines = false
     
@@ -46,6 +48,9 @@ struct ContentView: View {
     
     @State private var runningProcess: Process?
     @State var isPlotting = false
+    
+    @State var plotSingleLayer = false
+    @State var singleLayerNum = "1"
     
     let axiURL = URL(fileURLWithPath: "/usr/local/bin/axicli")
     
@@ -226,7 +231,7 @@ struct ContentView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0){
             HStack(spacing: 0){
-                SidebarView(modelNumber:$modelNumber, modelIndex: $modelIndex, reorderIndex: $reorderIndex, reorderNumber: $reorderNumber, removeHiddenLines: $removeHiddenLines, runWebhook: $runWebhook, webhookURL: $webhookURL, showPopover: $showPopover, goHome: goHome, walkX: walkX, walkY: walkY, enableMotors: enableMotors, disableMotors: disableMotors, penUp: penUp, penDown: penDown,onPreviewInvalidated: onPreviewInvalidated, hasFile: currentFileURL != nil, output: outputMessage)
+                SidebarView(modelNumber:$modelNumber, modelIndex: $modelIndex, reorderIndex: $reorderIndex, reorderNumber: $reorderNumber, removeHiddenLines: $removeHiddenLines, runWebhook: $runWebhook, webhookURL: $webhookURL, showPopover: $showPopover, speed: $speed, singleLayer: $plotSingleLayer, layerNum: $singleLayerNum, goHome: goHome, walkX: walkX, walkY: walkY, enableMotors: enableMotors, disableMotors: disableMotors, penUp: penUp, penDown: penDown,onPreviewInvalidated: onPreviewInvalidated, hasFile: currentFileURL != nil, output: outputMessage)
                 DragDropContentView(onFileDropped: onFilePathChanged)
             }.frame(maxWidth: .infinity)
             CommandBarView(startPlot: startPlot, resumeFromLocation: resumeFromLocation, resumeFromHome: resumeFromHome, runPreview: runPreview, hasFile: currentFileURL != nil, hasOutputFile: outputFileExists())
