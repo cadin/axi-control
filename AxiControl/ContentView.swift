@@ -72,32 +72,17 @@ struct ContentView: View {
                 let errorPipe = Pipe()
                 self.isRunning = true
                 
-                var newArgs = args + ["--model", String(modelNumber), "--reordering", String(reorderNumber), "--speed_pendown", String(Int(speed)) ]
                 
-                if(plotSingleLayer){
-                    if let layerNum = Int(singleLayerNum){
-                        if(layerNum > 0 && layerNum <= 1000){
-                            newArgs = newArgs + ["--layer", "\(layerNum)"]
-                        }
-                    }
-                }
                 
-                if(runWebhook && webhookURL.count > 0){
-                    newArgs = newArgs + ["--webhook", "--webhook_url", webhookURL]
-                }
                 
-                if(removeHiddenLines){
-                    newArgs = newArgs + ["--hiding"]
-                }
-                
-                print(newArgs.joined(separator: " "))
+                print(args.joined(separator: " "))
                 
                 let task = Process()
                 task.executableURL = axiURL
                 task.standardOutput = outputPipe
                 task.standardError = errorPipe
                 
-                task.arguments = newArgs
+                task.arguments = args
                 
                 task.terminationHandler = { _ in
                     DispatchQueue.main.async {
@@ -133,7 +118,26 @@ struct ContentView: View {
     
     func sendAxiCommand(_ cmd: String, withFile path: String) {
         let args = cmd.components(separatedBy: " ")
-        runAxiCLI(args: [path] + args)
+        
+        var newArgs = args + ["--model", String(modelNumber), "--reordering", String(reorderNumber), "--speed_pendown", String(Int(speed)) ]
+        
+        if(plotSingleLayer){
+            if let layerNum = Int(singleLayerNum){
+                if(layerNum > 0 && layerNum <= 1000){
+                    newArgs = newArgs + ["--mode", "layers", "--layer", "\(layerNum)"]
+                }
+            }
+        }
+        
+        if(runWebhook && webhookURL.count > 0){
+            newArgs = newArgs + ["--webhook", "--webhook_url", webhookURL]
+        }
+        
+        if(removeHiddenLines){
+            newArgs = newArgs + ["--hiding"]
+        }
+        
+        runAxiCLI(args: [path] + newArgs)
     }
     
     func sendAxiCommand(_ cmd: String) {
@@ -196,7 +200,7 @@ struct ContentView: View {
             if let original = originalFileURL {
                 let outputPath = getNewOutputPath(path: original)
                 isPlotting = true
-                runAxiCLI(args: [url.path, "-o", outputPath])
+                sendAxiCommand("-o \(outputPath)", withFile: url.path)
             }
         }
     }
