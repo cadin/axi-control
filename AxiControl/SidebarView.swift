@@ -41,7 +41,7 @@ struct SidebarView: View {
     @Binding var runWebhook: Bool
     @Binding var webhookURL: String
     
-    @Binding var showPopover:Bool 
+    @Binding var showPopover:Bool
     
     var goHome:() -> Void
     var walkX:() -> Void
@@ -50,6 +50,7 @@ struct SidebarView: View {
     var disableMotors:() -> Void
     var penUp:() -> Void
     var penDown:() -> Void
+    var onPreviewInvalidated:() -> Void
     
     var hasFile: Bool
     
@@ -85,6 +86,9 @@ struct SidebarView: View {
                         }
                         
                     }.frame(width: controlWidth )
+                    .onChange(of: modelIndex) { _ in
+                        onPreviewInvalidated()
+                    }
                 }
                 
                 HStack {
@@ -140,6 +144,9 @@ struct SidebarView: View {
                         }
                         
                     }.frame(width: controlWidth )
+                        .onChange(of: reorderIndex) { _ in
+                            onPreviewInvalidated()
+                        }
                     
                 }
                 
@@ -148,19 +155,13 @@ struct SidebarView: View {
                     Toggle(isOn: $removeHiddenLines) {
                         Text("Remove hidden lines")
                     }
+                    .onChange(of: removeHiddenLines) { _ in
+                        onPreviewInvalidated()
+                    }
                     Spacer()
                 }.frame(width: controlWidth)
                 
                 HStack {
-//                    Text("Webhook:").font(.subheadline).foregroundColor(Color.black.opacity(0.5))
-////                    TextField("Enter URL", text: $webhookURL, onCommit: {
-////                                                        DispatchQueue.main.async {
-////                                                            NSApp.keyWindow?.makeFirstResponder(nil)
-////                                                        }
-////                    }).frame(width: controlWidth).disabled(textFieldDisabled)     // << here !!
-////                        .onAppear {
-////                           DispatchQueue.main.async { textFieldDisabled = false } // << here !!
-////                        }
                     Toggle(isOn: $runWebhook) {
                         Text("Run webhook")
                     }.disabled(webhookURL.count < 1)

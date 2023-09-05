@@ -53,6 +53,7 @@ struct ContentView: View {
         currentFileURL = url
         originalFileURL = url
         tempCount = 0
+        onPreviewInvalidated()
     }
     
     func goHome() {
@@ -98,7 +99,7 @@ struct ContentView: View {
                         if(errorMessage.count > 0){
                             // time estimate is sent through standard error
                             if(errorMessage.hasPrefix("Estimated print time:")) {
-                                outputMessage = errorMessage
+                                outputMessage = errorMessage.trimmingCharacters(in: .whitespacesAndNewlines)
                             } else {
                                 showError = true
                             }
@@ -114,10 +115,6 @@ struct ContentView: View {
                 showError = true
             }
         }
-        
-        print(outputMessage)
-        print(errorMessage)
-    
     }
     
     func sendAxiCommand(_ cmd: String, withFile path: String) {
@@ -221,11 +218,15 @@ struct ContentView: View {
         return fileManager.fileExists(atPath: output)
     }
     
+    func onPreviewInvalidated(){
+        outputMessage = ""
+    }
+    
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0){
             HStack(spacing: 0){
-                SidebarView(modelNumber:$modelNumber, modelIndex: $modelIndex, reorderIndex: $reorderIndex, reorderNumber: $reorderNumber, removeHiddenLines: $removeHiddenLines, runWebhook: $runWebhook, webhookURL: $webhookURL, showPopover: $showPopover, goHome: goHome, walkX: walkX, walkY: walkY, enableMotors: enableMotors, disableMotors: disableMotors, penUp: penUp, penDown: penDown, hasFile: currentFileURL != nil, output: outputMessage)
+                SidebarView(modelNumber:$modelNumber, modelIndex: $modelIndex, reorderIndex: $reorderIndex, reorderNumber: $reorderNumber, removeHiddenLines: $removeHiddenLines, runWebhook: $runWebhook, webhookURL: $webhookURL, showPopover: $showPopover, goHome: goHome, walkX: walkX, walkY: walkY, enableMotors: enableMotors, disableMotors: disableMotors, penUp: penUp, penDown: penDown,onPreviewInvalidated: onPreviewInvalidated, hasFile: currentFileURL != nil, output: outputMessage)
                 DragDropContentView(onFileDropped: onFilePathChanged)
             }.frame(maxWidth: .infinity)
             CommandBarView(startPlot: startPlot, resumeFromLocation: resumeFromLocation, resumeFromHome: resumeFromHome, runPreview: runPreview, hasFile: currentFileURL != nil, hasOutputFile: outputFileExists())
