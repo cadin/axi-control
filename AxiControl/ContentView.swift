@@ -125,22 +125,22 @@ struct ContentView: View {
         showError = true
     }
     
-    func sendAxiCommand(_ cmd: String, withFile path: String) {
-        let args = cmd.components(separatedBy: " ")
+    func getArgsForCommand(_ cmd: String) -> [String]? {
+        let args = cmd.count > 0 ? cmd.components(separatedBy: " ") : []
         
         var newArgs = args + ["--model", String(modelNumber), "--reordering", String(reorderNumber), "--speed_pendown", String(Int(speed)) ]
         
-        if(plotSingleLayer){
+        if(plotSingleLayer && !newArgs.contains("--mode")){
             if let layerNum = Int(singleLayerNum){
                 if(layerNum > 0 && layerNum <= 1000){
                     newArgs = newArgs + ["--mode", "layers", "--layer", "\(layerNum)"]
                 } else {
                     showLayerError()
-                    return
+                    return nil
                 }
             } else {
                 showLayerError()
-                return
+                return nil
             }
         }
         
@@ -152,7 +152,19 @@ struct ContentView: View {
             newArgs = newArgs + ["--hiding"]
         }
         
-        runAxiCLI(args: [path] + newArgs)
+        return newArgs
+    }
+    
+    func sendAxiCommand(_ cmd: String, withFile path: String, outputPath: String) {
+        if let args = getArgsForCommand(cmd) {
+            runAxiCLI(args: [path, "-o", outputPath] + args)
+        }
+    }
+    
+    func sendAxiCommand(_ cmd:String, withFile path: String) {
+        if let args = getArgsForCommand(cmd) {
+            runAxiCLI(args: [path] + args)
+        }
     }
     
     func sendAxiCommand(_ cmd: String) {
@@ -215,7 +227,7 @@ struct ContentView: View {
             if let original = originalFileURL {
                 let outputPath = getNewOutputPath(path: original)
                 isPlotting = true
-                sendAxiCommand("-o \(outputPath)", withFile: url.path)
+                sendAxiCommand("", withFile: url.path, outputPath: outputPath)
             }
         }
     }
@@ -231,7 +243,7 @@ struct ContentView: View {
             let outputPath = getNewOutputPath(path: original)
             currentFileURL = URL(string: url)
             isPlotting = true
-            runAxiCLI(args: [url, "--mode", "res_plot", "-o", outputPath])
+            sendAxiCommand("--mode res_plot", withFile: url, outputPath: outputPath)
         }
     }
     
@@ -240,7 +252,7 @@ struct ContentView: View {
             let url = getCurrentOutputPath(path: original)
             let outputPath = getNewOutputPath(path: original)
             currentFileURL = URL(string: url)
-            runAxiCLI(args: [url, "--mode", "res_home", "-o", outputPath])
+            sendAxiCommand("--mode res_home", withFile: url, outputPath: outputPath)
         }
     }
     
