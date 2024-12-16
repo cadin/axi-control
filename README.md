@@ -19,7 +19,7 @@ See the full installation instructions on [AxiDraw.com](https://www.axidraw.com/
 
 ### 2. Download AxiControl
 
-Download the [`AxiControl.zip`](https://github.com/cadin/axi-control/releases/download/v1.0/AxiControl.zip) file from the [Releases](https://github.com/cadin/axi-control/releases/tag/v1.0) page.
+Download the [`AxiControl.zip`](https://github.com/cadin/axi-control/releases/latest/download/AxiControl.zip) file from the [Releases](https://github.com/cadin/axi-control/releases/) page.
 
 Unzip and move the app to your Applications folder.
 
@@ -28,6 +28,14 @@ Unzip and move the app to your Applications folder.
 This app isn't currently being notarized by Apple. This means you'll get a security warning when trying to launch the app for the first time ([more info here](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac)).
 
 To launch the app, Control-click (or right-click) the app and choose **Open**. Choose **Open** again from the dialog.
+
+#### Sequoia
+
+In Sequoia this process is even more restrictive.
+
+When you launch the app you'll see a dialog that says '"AxiControl" Not Opened', with no option to open it anyway.
+
+Go to **Settings > Privacy and Security** and you should see a message that says "AxiControl" was blocked to protect your Mac. Click **Open Anyway**, then choose **Open Anyway** from the dialog.
 
 You can open the app normally by double-clicking after completing this process.
 
