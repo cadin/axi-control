@@ -35,7 +35,7 @@ In Sequoia this process is even more restrictive.
 
 When you launch the app you'll see a dialog that says '"AxiControl" Not Opened', with no option to open it anyway.
 
-Go to **Settings > Privacy and Security** and you should see a message that says "AxiControl" was blocked to protect your Mac. Click **Open Anyway**, then choose **Open Anyway** from the dialog.
+Go to **Settings > Privacy and Security** and you should see a message that says "AxiControl" was blocked to protect your Mac'. Click **Open Anyway**, then choose **Open Anyway** from the dialog.
 
 You can open the app normally by double-clicking after completing this process.
 
