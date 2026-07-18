@@ -10,7 +10,10 @@ A Mac GUI for the [AxiDraw Command Line Interface](https://axidraw.com/doc/cli_a
 
 This app sends commands to AxiDraw through the AxiDraw CLI, so the CLI must be installed in order for the app to work.
 
-The app expects the CLI to be installed at `/usr/local/bin/`.
+The app will look for the CLI in the following locations: 
+- `/opt/homebrew/bin/`
+- `/usr/local/bin/`
+- `~/.local/bin/axicli`
 
 One line install:  
 `python -m pip install https://cdn.evilmadscientist.com/dl/ad/public/AxiDraw_API.zip`
