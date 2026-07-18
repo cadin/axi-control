@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct AxiControlApp: App {
+    private let axiCLIURL = ContentView.findAxiCLI()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(axiCLIURL: axiCLIURL)
         }
     }
 }

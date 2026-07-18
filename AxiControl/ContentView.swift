@@ -19,7 +19,11 @@ let plotDimensions: [[String: Double]] = [
     ["x": 7.48,  "y": 5.51]   // V3/B6
 ]
 
+
+
 struct ContentView: View {
+    let axiCLIURL: URL?
+
     @AppStorage("modelNumber") var modelNumber = 1
     @AppStorage("modelIndex") var modelIndex = 1
     
@@ -51,9 +55,47 @@ struct ContentView: View {
     
     @State var plotSingleLayer = false
     @State var singleLayerNum = "1"
-    
-    let axiURL = URL(fileURLWithPath: "/usr/local/bin/axicli")
-    
+
+    static func findAxiCLI() -> URL? {
+        let fileManager = FileManager.default
+        let candidates = [
+            "/opt/homebrew/bin/axicli",
+            "/usr/local/bin/axicli",
+            "\(NSHomeDirectory())/.local/bin/axicli"
+        ]
+
+        if let path = candidates.first(where: fileManager.isExecutableFile(atPath:)) {
+            return URL(fileURLWithPath: path)
+        }
+
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/which")
+        process.arguments = ["axicli"]
+
+        let pipe = Pipe()
+        process.standardOutput = pipe
+
+        do {
+            try process.run()
+            process.waitUntilExit()
+
+            guard process.terminationStatus == 0 else {
+                return nil
+            }
+
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            guard let path = String(data: data, encoding: .utf8)?
+                .trimmingCharacters(in: .whitespacesAndNewlines),
+                                    fileManager.isExecutableFile(atPath: path) else {
+                return nil
+            }
+
+            return URL(fileURLWithPath: path)
+        } catch {
+            return nil
+        }
+    }
+
     func onFilePathChanged(url: URL) {
         currentFileURL = url
         originalFileURL = url
@@ -68,14 +110,20 @@ struct ContentView: View {
     func runAxiCLI(args: [String]) {
         Task {
             do {
+                guard let axiCLIURL else {
+                    errorMessage = "AxiCLI is not installed or could not be found."
+                    showError = true
+                    return
+                }
+
                 let outputPipe = Pipe()
                 let errorPipe = Pipe()
                 self.isRunning = true
 
                 print(args.joined(separator: " "))
-                
+
                 let task = Process()
-                task.executableURL = axiURL
+                task.executableURL = axiCLIURL
                 task.standardOutput = outputPipe
                 task.standardError = errorPipe
                 
@@ -289,6 +337,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(axiCLIURL: nil)
     }
 }
